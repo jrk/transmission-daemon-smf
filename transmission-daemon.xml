@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!DOCTYPE service_bundle SYSTEM "/usr/share/lib/xml/dtd/service_bundle.dtd.1">
+
+<service_bundle type='manifest' name='transmission-daemon'>
+
+	<service
+		name='application/transmission-daemon'
+		type='service'
+		version='1'>
+
+		<!-- Wait for network interfaces to be initialized.  -->
+		<dependency
+			name='network'
+			grouping='require_all'
+			restart_on='none'
+			type='service'>
+			<service_fmri value='svc:/milestone/network:default' />
+		</dependency> 
+
+		<!-- Wait for all local filesystems to be mounted.  -->
+		<dependency
+			name='filesystem-local'
+			grouping='require_all'
+			restart_on='none'
+			type='service'>
+			<service_fmri value='svc:/system/filesystem/local:default' />
+		</dependency> 
+
+		<exec_method
+			type='method'
+			name='start'
+			exec='/lib/svc/method/transmission-daemon start'
+			timeout_seconds='60' />
+
+		<exec_method
+			type='method'
+			name='stop'
+			exec=':kill -9'
+			timeout_seconds='60' />
+
+		<!--
+			Both action_authorization and value_authorization are needed
+			to allow the framework general/enabled property to be changed
+			when performing action (enable, disable, etc) on the service.
+		-->
+		<property_group name='general' type='framework'>
+			<propval name='value_authorization' type='astring'
+				value='solaris.smf.value.transmission' />
+			<propval name='action_authorization' type='astring'
+				value='solaris.smf.manage.transmission' />
+		</property_group>
+
+		<property_group name='startd' type='framework'>
+			<!-- sub-process core dumps shouldn't restart session -->
+			<propval name='ignore_error' type='astring'
+				value='core,signal' />
+		</property_group>
+
+		<instance name='default' enabled='false'>
+
+			<method_context>
+				<method_credential user='transmission' group='other' />
+			</method_context>
+
+		</instance>
+
+		<stability value='Evolving' />
+
+		<template>
+			<common_name>
+				<loctext xml:lang='C'>
+					Transmission BitTorrent Client (Daemon)
+				</loctext>
+			</common_name>
+			<documentation>
+				<manpage title='transmission-daemon' section='1' />
+				<doc_link name='www.transmissionbt.org'
+					uri='http://www.transmissionbt.org' />
+			</documentation>
+		</template>
+
+	</service>
+
+</service_bundle>

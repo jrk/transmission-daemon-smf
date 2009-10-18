@@ -1,0 +1,2 @@
+cp transmission-daemon /lib/svc/method/
+svccfg import -V transmission-daemon.xml
