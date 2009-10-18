@@ -1,10 +1,8 @@
 # Origin:
+
 http://www.4amlunch.net/SMF/transmission-daemon
 
 ---
-
-Note: The file transmission-daemon_SMF.tar.gz is just all of these files
-in a tarball.
 
 Note: This is just something I threw together quickly so it's not the
 prettiest thing around.
@@ -13,7 +11,7 @@ prettiest thing around.
 
 Installation is simple, just run:
 
-# ./install_smf
+    # ./install_smf
 
 and you are done.  The script takes no arguments.
 
